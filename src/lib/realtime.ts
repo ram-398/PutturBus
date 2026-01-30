@@ -1,17 +1,17 @@
-import { getNowMinutes, toMinutes } from './time';
+import { getCurrentMinutes as getNowEngine, minutesFromTime } from './time-engine';
 
 /**
  * Real Time Engine for PutturBus
  * Centralizes all time-based logic, deltas, and live status.
- * Uses strict time.ts normalization.
+ * Uses strict time-engine.ts normalization.
  */
 
 export function getCurrentMinutes(): number {
-    return getNowMinutes();
+    return getNowEngine();
 }
 
 export function convertTimeToMinutes(time24: string): number {
-    return toMinutes(time24);
+    return minutesFromTime(time24);
 }
 
 export interface LiveStatus {
@@ -26,8 +26,8 @@ export interface LiveStatus {
  * @returns Status object or null if no special status
  */
 export function getLiveStatus(time24: string): LiveStatus | null {
-    const busMins = toMinutes(time24);
-    const nowMins = getNowMinutes();
+    const busMins = minutesFromTime(time24);
+    const nowMins = getNowEngine();
 
     const delta = busMins - nowMins;
 
@@ -65,6 +65,6 @@ export function getLiveStatus(time24: string): LiveStatus | null {
 export function getLastBusTime(allBuses: { time: string }[]): string | null {
     if (allBuses.length === 0) return null;
     // Assumes sorted input or sorts it
-    const sorted = [...allBuses].sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
+    const sorted = [...allBuses].sort((a, b) => minutesFromTime(a.time) - minutesFromTime(b.time));
     return sorted[sorted.length - 1].time;
 }

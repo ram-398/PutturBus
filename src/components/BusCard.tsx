@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { MapPin, ArrowRight, Clock, Bus as BusIcon } from 'lucide-react';
 import { Bus } from '@/types/bus';
 import { motion } from 'framer-motion';
-import { formatTime } from '@/lib/time-utils';
+// Use new Time Engine
+import { format12h } from '@/lib/time-engine';
 import { getLiveStatus } from '@/lib/realtime';
 
 interface BusCardProps {
@@ -32,7 +33,7 @@ export function BusCard({ bus, style }: BusCardProps) {
                     <div className="flex flex-row md:flex-col items-center md:items-start gap-4 md:gap-1 md:min-w-[90px] md:border-r border-slate-100 md:pr-4 w-full md:w-auto">
                         <div className="text-center md:text-left">
                             <span className={`text-3xl font-bold tracking-tight block leading-none ${status?.isDeparting ? 'text-red-500' : 'text-slate-900'}`}>
-                                {formatTime(bus.time)}
+                                {format12h(bus.time)}
                             </span>
                             {/* Status Indicator */}
                             {status && (

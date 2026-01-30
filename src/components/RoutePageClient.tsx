@@ -11,10 +11,11 @@ import { Bus } from '@/types/bus';
 import busData from '@/data/bus-routes.json';
 import { getCoordinates, calculateDistance } from '@/lib/geo';
 import { getStopsForRoute } from '@/data/stops';
-import { getTravelTime, getDepartureDelta } from '@/lib/route-engine';
-import { getNowMinutes, toMinutes, formatMinutesToTime } from '@/lib/time';
+// PHASE 1 & 2 IMPORTS
+import { getCurrentMinutes, minutesFromTime, timeFromMinutes, format12h } from '@/lib/time-engine';
+import { getRoutePhysics } from '@/data/route-physics';
 import { findDestination } from '@/lib/route-matcher';
-import { calculateFrequency, formatTime } from '@/lib/time-utils';
+import { calculateFrequency } from '@/lib/time-utils';
 
 interface RoutePageClientProps {
     slug: string;
@@ -24,71 +25,77 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
     const [nowMinutes, setNowMinutes] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // 1. Live Time Update (Every Minute)
+    // PHASE 9: Auto Live Refresh (Every 60s)
     useEffect(() => {
-        // Initial set
-        setNowMinutes(getNowMinutes());
+        setNowMinutes(getCurrentMinutes());
         setIsLoaded(true);
 
         const interval = setInterval(() => {
-            setNowMinutes(getNowMinutes());
-        }, 30000); // 30s update
+            setNowMinutes(getCurrentMinutes());
+        }, 60000);
 
         return () => clearInterval(interval);
     }, []);
 
-    // 2. Resolve Destination
     const destinationName = findDestination(slug);
 
-    // 3. Filter & Sort Buses
+    // Filter Buses for this route
     const routeBuses = destinationName
         ? busData.filter(b => b.to === destinationName) as Bus[]
         : [];
 
-    // STRICT FILTERING
-    // Only show buses that are equal to or after current time
-    // Keeping a 2-minute buffer for "Just Left" vs "Gone"
-    const visibleBuses = routeBuses.filter(bus => {
-        const busMinutes = toMinutes(bus.time);
-        return busMinutes >= (nowMinutes - 2);
-    });
+    // PHASE 4: Live Filtering
+    // Morning buses NEVER appear in evening
+    const upcomingBuses = routeBuses
+        .map(bus => ({
+            ...bus,
+            depMin: minutesFromTime(bus.time)
+        }))
+        // Filter: Show future buses OR buses that left recently (within last 5 mins)
+        // Also handle late night edge case where bus time < now (next day)? 
+        // For simplicity in this phase, we assume same day filtering.
+        .filter(bus => bus.depMin >= nowMinutes - 5)
+        .sort((a, b) => a.depMin - b.depMin);
 
-    // Sort by soonest
-    const sortedBuses = visibleBuses.sort((a, b) =>
-        toMinutes(a.time) - toMinutes(b.time)
-    );
+    // PHASE 5: Next Bus Logic
+    const nextBus = upcomingBuses[0];
 
-    // Get Next Bus (First in sorted list)
-    const nextBus = sortedBuses[0];
+    // Physics Data
+    const physics = getRoutePhysics(destinationName || "");
+    const distanceKm = physics.distanceKm;
+    const travelTime = physics.durationMin;
 
-    // Stats (frequency uses all scheduled buses)
-    const allSorted = [...routeBuses].sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
-    const lastBusTime = allSorted[allSorted.length - 1]?.time;
-    const frequencyLabel = calculateFrequency(allSorted.map(b => b.time));
+    // Derived Times
+    const nextDepartureMins = nextBus ? nextBus.depMin : 0;
+    const departureDelta = nextBus ? (nextDepartureMins - nowMinutes) : 0;
 
-    // Physics 
+    // PHASE 3: Arrival Time
+    // arrivalTime = departureTime + route.durationMin
+    const arrivalTime = nextBus
+        ? timeFromMinutes(nextBus.depMin + travelTime)
+        : "--:--";
+
+    // Map Data
     const fromCoords = getCoordinates('puttur') || { lat: 12.7686, lng: 75.2034 };
     const toCoords = getCoordinates(destinationName) || { lat: 12.9141, lng: 74.8560 };
-    const distanceKm = calculateDistance(fromCoords, toCoords);
     const routeStops = getStopsForRoute(destinationName).map(s => s.name);
     const intermediateStops = routeStops.filter(s => s.toLowerCase() !== 'puttur' && s.toLowerCase() !== destinationName.toLowerCase());
 
-    const travelTime = nextBus ? getTravelTime(distanceKm, nextBus.type) : 60;
-    let departureDelta = nextBus ? (toMinutes(nextBus.time) - nowMinutes) : 0;
+    // Stats
+    const allSorted = [...routeBuses].sort((a, b) => minutesFromTime(a.time) - minutesFromTime(b.time));
+    const lastBusTime = allSorted[allSorted.length - 1]?.time;
 
     // Loading State
-    if (!isLoaded) {
-        return <div className="min-h-screen bg-slate-50" />;
-    }
+    if (!isLoaded) return <div className="min-h-screen bg-slate-50" />;
 
     // 404 State
     if (!destinationName || routeBuses.length === 0) {
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
                 <div className="text-center max-w-md">
-                    <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Route Not Found</h2>
-                    <Link href="/" className="px-6 py-3 bg-blue-600 text-white rounded-xl">Go Home</Link>
+                    <AlertCircle className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h2 className="text-xl font-bold text-slate-900 mb-2">Route Not Found</h2>
+                    <Link href="/" className="px-6 py-3 bg-slate-900 text-white rounded-xl text-sm font-medium">Go Home</Link>
                 </div>
             </div>
         );
@@ -113,12 +120,12 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
                         </h1>
                     </div>
                     {/* Live Indicator */}
-                    <div className="ml-auto flex items-center gap-1.5 px-2 py-1 bg-emerald-50 border border-emerald-100 rounded-full">
+                    <div className="ml-auto flex items-center gap-1.5 px-2 py-1 bg-rose-50 border border-rose-100 rounded-full">
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
                         </span>
-                        <span className="text-[10px] font-bold text-emerald-700">LIVE</span>
+                        <span className="text-[10px] font-bold text-rose-700">LIVE</span>
                     </div>
                 </div>
             </motion.header>
@@ -130,6 +137,7 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
                     to={toCoords}
                     destinationName={destinationName}
                     viaStops={intermediateStops}
+                // PHASE 6 Placeholder: We pass time delta to animate map later
                 />
             </div>
 
@@ -141,78 +149,81 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
                         <div className="w-12 h-1.5 bg-slate-300 rounded-full opacity-50" />
                     </div>
 
+                    {/* Stats Grid */}
                     <div className="bg-white mx-4 mt-2 rounded-2xl shadow-sm border border-slate-100 p-4 grid grid-cols-3 divide-x divide-slate-100">
                         {/* Column 1: NEXT BUS */}
                         <div className="px-2 flex flex-col items-center text-center">
                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Next Bus</div>
                             <div className={`text-xl font-bold tracking-tight mb-1 ${nextBus ? 'text-slate-900' : 'text-slate-400'}`}>
-                                {nextBus ? formatTime(nextBus.time) : "Done"}
+                                {nextBus ? format12h(nextBus.time) : "Done"}
                             </div>
                             {nextBus ? (
                                 (() => {
-                                    if (departureDelta <= 0) return <span className="text-[10px] font-bold text-slate-400">Boarding / Left</span>;
-                                    if (departureDelta < 15) return <span className="text-[10px] font-bold text-emerald-600 animate-pulse">In {departureDelta} min</span>;
-                                    return <span className="text-[10px] font-medium text-slate-500">Leaves in {departureDelta}m</span>;
+                                    if (departureDelta <= 0) return <span className="text-[10px] font-bold text-rose-600 animate-pulse">Departing</span>;
+                                    if (departureDelta < 15) return <span className="text-[10px] font-bold text-emerald-600">In {departureDelta} min</span>;
+                                    return <span className="text-[10px] font-medium text-slate-500">in {departureDelta} min</span>;
                                 })()
                             ) : <span className="text-[10px] font-medium text-slate-400">Back tomorrow</span>}
                         </div>
 
-                        {/* Column 2: EST TRAVEL */}
+                        {/* Column 2: ARRIVAL TIME */}
                         <div className="px-2 flex flex-col items-center text-center">
-                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Est. Travel</div>
+                            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reaches At</div>
                             <div className="text-xl font-bold text-slate-900 tracking-tight mb-1">
-                                {nextBus ? `${Math.floor(travelTime / 60)}h ${travelTime % 60}m` : "--"}
+                                {nextBus ? arrivalTime : "--:--"}
                             </div>
                             <div className="text-[10px] font-medium text-slate-500">
-                                {nextBus ? `~${distanceKm.toFixed(0)} km` : "Distance"}
+                                {nextBus ? `~${Math.floor(travelTime / 60)}h ${travelTime % 60}m risk` : "Duration"}
                             </div>
                         </div>
 
                         {/* Column 3: LAST BUS */}
                         <div className="px-2 flex flex-col items-center text-center">
                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 text-orange-600/80">Last Bus</div>
-                            <div className="text-xl font-bold text-slate-900 tracking-tight mb-1">{formatTime(lastBusTime || "")}</div>
-                            <div className="text-[10px] font-medium text-slate-400">Ends at {formatTime(lastBusTime || "")}</div>
+                            <div className="text-xl font-bold text-slate-900 tracking-tight mb-1">
+                                {format12h(lastBusTime || "00:00")}
+                            </div>
+                            <div className="text-[10px] font-medium text-slate-400">Ends Today</div>
                         </div>
                     </div>
 
-                    {/* Trust Signal */}
                     <div className="flex justify-center items-center gap-2 py-4">
                         <Clock className="w-3 h-3 text-slate-400" />
                         <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
-                            {formatMinutesToTime(nowMinutes)} • Live Updates
+                            Updated {format12h(timeFromMinutes(nowMinutes))}
                         </span>
                     </div>
 
                     <div className="px-4 pb-20">
                         <div className="flex items-center justify-between mb-4 mt-2">
                             <h2 className="font-bold text-slate-700 text-lg flex items-center gap-2">
-                                Upcoming Buses <span className="text-slate-400 text-sm font-normal">({sortedBuses.length})</span>
+                                Upcoming Buses <span className="text-slate-400 text-sm font-normal">({upcomingBuses.length})</span>
                             </h2>
                         </div>
 
-                        {sortedBuses.length > 0 ? (
+                        {upcomingBuses.length > 0 ? (
                             <div className="space-y-3 mb-8">
-                                <BusList buses={sortedBuses} />
+                                {/* We map upcomingBuses back to Bus type or handle correctly in BusList */}
+                                {/* Assuming BusList accepts Bus[], and our filtered object has extra depMin but compatible */}
+                                <BusList buses={upcomingBuses} />
                             </div>
                         ) : (
-                            // Empty State
                             <div className="flex flex-col items-center justify-center py-12 px-4 text-center bg-slate-50 rounded-2xl border border-slate-100 border-dashed">
                                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                                     <Clock className="w-8 h-8 text-slate-300" />
                                 </div>
                                 <h3 className="text-lg font-bold text-slate-700 mb-1">No more buses today</h3>
                                 <p className="text-slate-500 text-sm max-w-xs mx-auto">
-                                    The last bus departed at <span className="font-bold text-slate-700">{formatTime(lastBusTime || "")}</span>. Services resume tomorrow morning.
+                                    Services resume tomorrow morning.
                                 </p>
                             </div>
                         )}
 
-                        {/* Timeline Preview */}
+                        {/* Phase 7: Timeline Intelligence */}
                         <div className="pt-8 border-t border-slate-200 mt-8">
                             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                                 <MapPin className="w-5 h-5 text-blue-500" />
-                                Route Stops
+                                Live Route Progress
                             </h3>
                             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                                 <RouteTimeline via={routeBuses[0]?.via || ''} destination={destinationName} />
