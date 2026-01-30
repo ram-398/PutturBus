@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 };
 
 import { SiteHeader } from "@/components/SiteHeader";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 
 export default function RootLayout({
   children,
@@ -19,8 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased font-sans bg-background text-foreground`}>
-        <SiteHeader />
-        {children}
+        <LanguageProvider>
+          <OfflineIndicator />
+          <SiteHeader />
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

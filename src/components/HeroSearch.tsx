@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Search, MapPin, ArrowRight, History, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SearchTabs } from './SearchTabs';
+import { useLanguage } from '@/context/LanguageContext';
 
 const POPULAR_DESTINATIONS = ['Mangalore', 'Bengaluru', 'Mysuru', 'Kasaragod', 'Panaji', 'Sulya', 'Udupi', 'Karwar'];
 
@@ -14,6 +15,7 @@ interface HeroSearchProps {
 }
 
 export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
+    const { t } = useLanguage();
     const [activeTab, setActiveTab] = useState<'bus' | 'route'>('bus');
     const [query, setQuery] = useState('');
     const [isFocused, setIsFocused] = useState(false);
@@ -35,10 +37,10 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                 {/* Clean Header */}
                 <div className="mb-8 space-y-3">
                     <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
-                        Find buses from Puttur
+                        {t('find_buses_title')}
                     </h1>
                     <p className="text-slate-500 text-lg font-normal mb-6">
-                        Search KSRTC routes, timings, and connections instantly.
+                        {t('find_buses_subtitle')}
                     </p>
 
                     <div className="flex justify-center md:hidden">
@@ -48,7 +50,7 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                     <div className="hidden md:flex justify-center gap-4">
                         <Link href="/directory" className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 transition-colors">
                             <Navigation className="w-4 h-4" />
-                            Browse complete route map
+                            {t('browse_routes')}
                         </Link>
                     </div>
                 </div>
@@ -71,7 +73,7 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                                 <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center relative gap-3 cursor-not-allowed">
                                     <div className="w-2.5 h-2.5 rounded-full bg-slate-400 ring-4 ring-slate-200 ml-1"></div>
                                     <div className="text-left">
-                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">From</div>
+                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('from')}</div>
                                         <div className="font-semibold text-slate-600">Puttur KSRTC</div>
                                     </div>
                                     <div className="ml-auto">
@@ -93,13 +95,13 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
 
                                     <div className="text-left w-full relative">
                                         <div className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${isFocused ? 'text-blue-500' : 'text-slate-400'}`}>
-                                            To
+                                            {t('to')}
                                         </div>
                                         <input
                                             ref={inputRef}
                                             type="text"
                                             className="w-full bg-transparent text-slate-900 placeholder:text-slate-300 focus:outline-none font-semibold text-lg leading-tight"
-                                            placeholder="Enter destination..."
+                                            placeholder={t('search_placeholder')}
                                             value={query}
                                             onChange={(e) => {
                                                 setQuery(e.target.value);
@@ -141,7 +143,7 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                                         className="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl px-8 py-4 md:py-0 transition-all flex items-center justify-center gap-2 shadow-md shadow-sky-500/20 active:scale-95 focus:ring-4 focus:ring-sky-500/30 outline-none"
                                     >
                                         <Search className="w-5 h-5" />
-                                        <span className="md:hidden">Find Buses</span>
+                                        <span className="md:hidden">{t('find_buses_btn')}</span>
                                     </button>
 
                                     <Link href="/directory" className="flex md:hidden items-center justify-center p-4 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 active:scale-95 transition-all">
@@ -159,7 +161,7 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                                     <input
                                         type="text"
                                         className="w-full bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none font-medium text-lg"
-                                        placeholder="Search for any route..."
+                                        placeholder={t('search_placeholder')}
                                         value={query}
                                         onChange={(e) => {
                                             setQuery(e.target.value);
@@ -176,7 +178,7 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
 
                 {/* Popular Routes Cards */}
                 <div className="mt-10 max-w-4xl mx-auto">
-                    <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">Popular Routes</p>
+                    <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">{t('popular_routes')}</p>
                     <div className="flex flex-wrap justify-center gap-3">
                         {POPULAR_DESTINATIONS.map((dest) => (
                             <motion.button
