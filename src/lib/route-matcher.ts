@@ -33,7 +33,8 @@ const ALIAS_MAP: Record<string, string> = {
     'uppinangadi': 'Uppinangady',
     'b c road': 'BC Road',
     'bc road': 'BC Road',
-    'bcroad': 'BC Road'
+    'bcroad': 'BC Road',
+    'karwara': 'Karwar'
 };
 
 // Fuzzy Search Instance
@@ -84,10 +85,10 @@ const INTERCITY_KEYS = new Set([
     'Bengaluru',
     'Mysuru',
     'Panaji',
-    'Kasaragod',
     'Hubli',
     'Mumbai',
     'Goa',
+    'Karwar',
     'Badiyadka',
     'Bhatkala',
     'Chamarajanagara',
@@ -116,7 +117,7 @@ export function isIntercityDest(destination: string | null): boolean {
     // Check if the canonical name is in our Intercity List
     // OR if it's NOT in the inferred Local list (if we want that logic).
     // For now, explicit inclusion is safer to avoid breaking existing routes.
-    return INTERCITY_KEYS.has(destination) || destination === 'Kasaragodu';
+    return INTERCITY_KEYS.has(destination);
 }
 
 export function getAllDestinations(): string[] {

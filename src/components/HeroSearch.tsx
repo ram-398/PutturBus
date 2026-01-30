@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { Search, MapPin, ArrowRight, History, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SearchTabs } from './SearchTabs';
 
-const POPULAR_DESTINATIONS = ['Mangalore', 'Bengaluru', 'Mysuru', 'Kasaragod', 'Panaji'];
+const POPULAR_DESTINATIONS = ['Mangalore', 'Bengaluru', 'Mysuru', 'Kasaragod', 'Panaji', 'Sulya', 'Udupi', 'Karwar'];
 
 interface HeroSearchProps {
     onSearch: (term: string) => void;
@@ -36,9 +37,20 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                     <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
                         Find buses from Puttur
                     </h1>
-                    <p className="text-slate-500 text-lg font-normal">
+                    <p className="text-slate-500 text-lg font-normal mb-6">
                         Search KSRTC routes, timings, and connections instantly.
                     </p>
+
+                    <div className="flex justify-center md:hidden">
+                        {/* Mobile CTA handled in search bar area, or could add here */}
+                    </div>
+
+                    <div className="hidden md:flex justify-center gap-4">
+                        <Link href="/directory" className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 transition-colors">
+                            <Navigation className="w-4 h-4" />
+                            Browse complete route map
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Main Search Card */}
@@ -123,13 +135,19 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                                 </div>
 
                                 {/* Search Button */}
-                                <button
-                                    onClick={() => { }}
-                                    className="bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl px-8 py-4 md:py-0 transition-all flex items-center justify-center gap-2 shadow-md shadow-sky-500/20 active:scale-95 focus:ring-4 focus:ring-sky-500/30 outline-none"
-                                >
-                                    <Search className="w-5 h-5" />
-                                    <span className="md:hidden">Find Buses</span>
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => { }}
+                                        className="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl px-8 py-4 md:py-0 transition-all flex items-center justify-center gap-2 shadow-md shadow-sky-500/20 active:scale-95 focus:ring-4 focus:ring-sky-500/30 outline-none"
+                                    >
+                                        <Search className="w-5 h-5" />
+                                        <span className="md:hidden">Find Buses</span>
+                                    </button>
+
+                                    <Link href="/directory" className="flex md:hidden items-center justify-center p-4 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 active:scale-95 transition-all">
+                                        <MapPin className="w-6 h-6" />
+                                    </Link>
+                                </div>
                             </>
                         ) : (
                             <div className="w-full relative">

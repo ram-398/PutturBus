@@ -1,5 +1,89 @@
 [
   {
+    "id": "pdf-new-1",
+    "from": "Puttur",
+    "to": "Karwar",
+    "via": [
+      "Mangaluru",
+      "Udupi",
+      "Kumta"
+    ],
+    "operator": "KSRTC",
+    "serviceType": "Express",
+    "departureTime": "06:30",
+    "arrivalTime": "11:30",
+    "duration": "5h 00m",
+    "distanceKm": 220,
+    "daysRunning": "Daily",
+    "price": 350
+  },
+  {
+    "id": "pdf-new-2",
+    "from": "Puttur",
+    "to": "Karwar",
+    "via": [
+      "Mangaluru",
+      "Udupi",
+      "Kumta"
+    ],
+    "operator": "KSRTC",
+    "serviceType": "Rajahamsa",
+    "departureTime": "09:00",
+    "arrivalTime": "14:00",
+    "duration": "5h 00m",
+    "distanceKm": 220,
+    "daysRunning": "Daily",
+    "price": 450
+  },
+  {
+    "id": "pdf-new-3",
+    "from": "Puttur",
+    "to": "Udupi",
+    "via": [
+      "Mangaluru"
+    ],
+    "operator": "KSRTC",
+    "serviceType": "Express",
+    "departureTime": "07:00",
+    "arrivalTime": "09:15",
+    "duration": "2h 15m",
+    "distanceKm": 90,
+    "daysRunning": "Daily",
+    "price": 110
+  },
+  {
+    "id": "pdf-new-4",
+    "from": "Puttur",
+    "to": "Udupi",
+    "via": [
+      "Mangaluru"
+    ],
+    "operator": "KSRTC",
+    "serviceType": "Express",
+    "departureTime": "08:30",
+    "arrivalTime": "10:45",
+    "duration": "2h 15m",
+    "distanceKm": 90,
+    "daysRunning": "Daily",
+    "price": 110
+  },
+  {
+    "id": "pdf-new-5",
+    "from": "Puttur",
+    "to": "Udupi",
+    "via": [
+      "Mangaluru"
+    ],
+    "operator": "KSRTC",
+    "serviceType": "Volvo",
+    "departureTime": "10:00",
+    "arrivalTime": "12:00",
+    "duration": "2h 00m",
+    "distanceKm": 90,
+    "daysRunning": "Daily",
+    "price": 200
+  },
+  {
     "id": "pdf-1",
     "from": "Puttur",
     "to": "Badiyadka",
