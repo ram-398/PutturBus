@@ -1,65 +1,111 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useMemo } from 'react';
+import Fuse from 'fuse.js';
+import busData from '@/data/bus-routes.json';
+import { Bus } from '@/types/bus';
+import { HeroSearch } from '@/components/HeroSearch';
+import { BusList } from '@/components/BusList';
+import { FilterBar } from '@/components/FilterBar';
+import { Disclaimer } from '@/components/Disclaimer';
+import { QuickLinks } from '@/components/QuickLinks';
+import { HowItWorks } from '@/components/HowItWorks';
+import { TrustIndicators } from '@/components/TrustIndicators';
+
+// Extract unique destinations for auto-suggest
+const DESTINATIONS = Array.from(new Set(busData.map(b => b.to))).sort();
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTime, setSelectedTime] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+
+  const fuse = useMemo(() => new Fuse(busData as Bus[], {
+    keys: ['to', 'via'],
+    threshold: 0.3,
+    distance: 100,
+  }), []);
+
+  const filteredBuses = useMemo(() => {
+    let results = busData as Bus[];
+
+    if (searchTerm.trim()) {
+      results = fuse.search(searchTerm).map(result => result.item);
+    }
+
+    if (selectedTime !== 'all') {
+      const now = new Date();
+      results = results.filter(bus => {
+        const [h, m] = bus.time.split(':').map(Number);
+        const mins = h * 60 + m;
+
+        if (selectedTime === 'morning') return mins >= 300 && mins < 720;
+        if (selectedTime === 'afternoon') return mins >= 720 && mins < 1020;
+        if (selectedTime === 'evening') return mins >= 1020;
+        return true;
+      });
+    }
+
+    if (selectedType !== 'all') {
+      results = results.filter(bus =>
+        bus.type.toLowerCase().includes(selectedType.toLowerCase())
+      );
+    }
+
+    return results;
+  }, [searchTerm, selectedTime, selectedType, fuse]);
+
+  const isSearching = searchTerm.trim().length > 0 || selectedTime !== 'all' || selectedType !== 'all';
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <main className="min-h-screen bg-background">
+      <HeroSearch
+        onSearch={setSearchTerm}
+        suggestions={DESTINATIONS}
+      />
+
+      <div className="-mt-16 relative z-30 max-w-3xl mx-auto px-4 pb-20">
+        <div className="bg-card rounded-3xl shadow-xl border border-border/50 min-h-[60vh] overflow-hidden">
+          <div className="bg-slate-50/50 border-b border-slate-100 sticky top-0 z-10">
+            <div className="pt-2 px-4 pb-2">
+              <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2" />
+            </div>
+            <FilterBar
+              selectedTime={selectedTime}
+              onTimeChange={setSelectedTime}
+              selectedType={selectedType}
+              onTypeChange={setSelectedType}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+
+          {!isSearching ? (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <QuickLinks />
+              <HowItWorks />
+            </div>
+          ) : (
+            <div className="px-2 pt-2 animate-in fade-in zoom-in-95 duration-300">
+              <div className="text-sm text-muted-foreground px-4 mb-2 font-medium flex justify-between items-center py-2">
+                <span>{filteredBuses.length} buses found</span>
+                {searchTerm && <span className="text-primary truncate ml-2">to &quot;{searchTerm}&quot;</span>}
+              </div>
+
+              <BusList buses={filteredBuses} />
+            </div>
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+
+      {!isSearching && <TrustIndicators />}
+
+      <div className="py-8 bg-background">
+        <Disclaimer />
+        <footer className="text-center text-muted-foreground text-sm pb-8">
+          <p className="font-bold text-lg mb-1 text-primary">PutturBus</p>
+          <p>© {new Date().getFullYear()} Unofficial Student Project.</p>
+          <p className="mt-1 font-medium">Powered by Sitexar</p>
+        </footer>
+      </div>
+    </main>
   );
 }
