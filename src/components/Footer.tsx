@@ -35,11 +35,11 @@ export function Footer() {
                     {/* Column 2: Quick Links (Accordion on Mobile) */}
                     <FooterSection title={t('footer_quick_links')}>
                         <FooterLink href="/" label={t('home')} />
-                        <FooterLink href="/#hero-search" label={t('footer_search_bus')} />
+                        <FooterLink href="/puttur-bus-stand" label="Puttur Bus Stand" />
+                        <FooterLink href="/destinations/mangalore" label="Mangalore Buses" />
+                        <FooterLink href="/destinations/bengaluru" label="Bangalore Buses" />
                         <FooterLink href="/directory" label={t('bus_directory')} />
                         <FooterLink href="/help" label={t('help_info')} />
-                        <FooterLink href="/help/emergency" label={t('card_emergency_title')} />
-                        <FooterLink href="/help/travel" label={t('footer_travel_guide')} />
                     </FooterSection>
 
                     {/* Column 3: Community */}
