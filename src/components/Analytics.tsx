@@ -2,7 +2,7 @@
 import Script from "next/script"
 
 export default function Analytics() {
-    const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+    const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-9YTT51NE9T'
 
     if (!GA_ID) return null
 
