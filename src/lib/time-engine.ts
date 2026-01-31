@@ -58,7 +58,9 @@ export function minutesFromTime(timeString: string): number {
  */
 export function timeFromMinutes(totalMinutes: number): string {
     // Handle day rollover (e.g., 25:00 -> 1:00 AM)
-    let normalizedMinutes = totalMinutes % 1440;
+    // Fix: Ensure we are working with integers to avoid "7:17.02999 PM"
+    const integerMinutes = Math.floor(totalMinutes);
+    let normalizedMinutes = integerMinutes % 1440;
     if (normalizedMinutes < 0) normalizedMinutes += 1440;
 
     const h = Math.floor(normalizedMinutes / 60);
