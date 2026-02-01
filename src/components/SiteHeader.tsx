@@ -12,8 +12,8 @@ export function SiteHeader() {
     const { language, setLanguage, t } = useLanguage();
 
     return (
-        <header className="bg-white border-b border-slate-200 sticky top-0 z-50 transition-all">
-            <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+        <header className="bg-white border-b border-slate-200 sticky top-0 z-50 transition-all safe-top">
+            <div className="max-w-6xl mx-auto px-4 h-[var(--header-height)] flex items-center justify-between gap-4">
                 {/* Logo / Home Link */}
                 <Link href="/" className="flex items-center gap-2 group shrink-0">
                     <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-slate-100 shadow-sm group-hover:border-blue-200 transition-colors">

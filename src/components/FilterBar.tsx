@@ -24,7 +24,7 @@ export function FilterBar({ selectedTime, onTimeChange, selectedType, onTypeChan
     ];
 
     return (
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border py-2 px-4 space-y-2">
+        <div className="sticky top-[calc(var(--header-height)+env(safe-area-inset-top))] z-40 bg-background/80 backdrop-blur-md border-b border-border py-2 px-4 space-y-2 transition-all">
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                 {times.map((t) => (
                     <button

@@ -104,7 +104,7 @@ export default function Home() {
 
       <div className="-mt-16 relative z-30 max-w-3xl mx-auto px-4 pb-20">
         <div className="bg-card rounded-3xl shadow-xl border border-border/50 min-h-[60vh] overflow-hidden">
-          <div className="bg-slate-50/50 border-b border-slate-100 sticky top-0 z-10">
+          <div className="bg-slate-50/50 border-b border-slate-100 sticky top-[calc(var(--header-height)+env(safe-area-inset-top)-1px)] z-30 backdrop-blur-md">
             <div className="pt-2 px-4 pb-2">
               <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2" />
             </div>

@@ -140,11 +140,11 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
 
     return (
         <main className="min-h-screen bg-slate-50 flex flex-col">
-            {/* Sticky Header */}
+            {/* Sticky Route Header */}
             <motion.header
                 initial={{ y: -10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-3"
+                className="sticky top-[var(--header-height)] z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-3 shadow-sm transition-all"
             >
                 <div className="max-w-2xl mx-auto flex items-center gap-4">
                     <Link href="/" className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
@@ -167,8 +167,8 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
                 </div>
             </motion.header>
 
-            {/* Map Area */}
-            <div className="relative w-full h-[45vh] md:h-[60vh] bg-slate-200 shrink-0">
+            {/* Map Area - Natural Flow (Not Absolute) */}
+            <div className="relative w-full h-[40vh] md:h-[50vh] bg-slate-200 shrink-0">
                 <RouteMapWrapper
                     from={fromCoords}
                     to={toCoords}
@@ -178,16 +178,16 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
                 />
             </div>
 
-            {/* Docked Summary Card */}
-            <div className="flex-1 bg-slate-50 -mt-4 relative z-10 rounded-t-3xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-slate-200">
-                <div className="max-w-2xl mx-auto">
-                    {/* Drag Handle */}
-                    <div className="w-full h-6 flex justify-center items-center">
+            {/* Content Area - Natural Flow */}
+            <div className="flex-1 bg-slate-50 relative z-10 -mt-4 rounded-t-3xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] border-t border-slate-200 overflow-hidden">
+                <div className="max-w-2xl mx-auto pt-2">
+                    {/* Drag Handle Visual */}
+                    <div className="w-full flex justify-center items-center py-2 mb-2">
                         <div className="w-12 h-1.5 bg-slate-300 rounded-full opacity-50" />
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="bg-white mx-4 mt-2 rounded-2xl shadow-sm border border-slate-100 p-4 grid grid-cols-3 divide-x divide-slate-100">
+                    <div className="bg-white mx-4 rounded-2xl shadow-sm border border-slate-100 p-4 grid grid-cols-3 divide-x divide-slate-100">
                         {/* Column 1: NEXT BUS */}
                         <div className="px-2 flex flex-col items-center text-center">
                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Next Bus</div>
@@ -236,7 +236,7 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
                         </span>
                     </div>
 
-                    <div className="px-4 pb-20">
+                    <div className="px-4 pb-20 safe-pb">
                         <div className="flex items-center justify-between mb-4 mt-2">
                             <h2 className="font-bold text-slate-700 text-lg flex items-center gap-2">
                                 Upcoming Buses <span className="text-slate-400 text-sm font-normal">({upcomingBuses.length})</span>
@@ -245,8 +245,6 @@ export function RoutePageClient({ slug }: RoutePageClientProps) {
 
                         {upcomingBuses.length > 0 ? (
                             <div className="space-y-3 mb-8">
-                                {/* We map upcomingBuses back to Bus type or handle correctly in BusList */}
-                                {/* Assuming BusList accepts Bus[], and our filtered object has extra depMin but compatible */}
                                 <BusList buses={upcomingBuses} />
                             </div>
                         ) : (
