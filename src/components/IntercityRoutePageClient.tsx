@@ -6,10 +6,19 @@ import { ArrowLeft, Clock, MapPin, ArrowRight, Filter, AlertCircle } from 'lucid
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { IntercityBusCard } from '@/components/IntercityBusCard';
-import { RouteMapWrapper } from '@/components/RouteMapWrapper';
 import { getUpcomingIntercityBuses, getAllIntercityBusesSorted } from '@/lib/intercity-engine';
 import { getCoordinates } from '@/lib/geo';
 import { findDestination } from '@/lib/route-matcher';
+import dynamic from 'next/dynamic';
+import { MapSkeleton } from '@/components/Skeletons';
+
+const RouteMapWrapper = dynamic(
+    () => import('@/components/RouteMapWrapper').then((mod) => mod.RouteMapWrapper),
+    {
+        ssr: false,
+        loading: () => <MapSkeleton />
+    }
+);
 
 interface Props {
     slug: string;

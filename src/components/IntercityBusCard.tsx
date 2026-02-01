@@ -86,7 +86,7 @@ export function IntercityBusCard({ bus }: IntercityBusCardProps) {
                 {/* Timings */}
                 <div className="flex items-center justify-between mb-4">
                     <div className="text-center md:text-left">
-                        <div className="text-xl font-bold text-slate-900 leading-none">
+                        <div className="text-2xl font-bold text-slate-900 leading-none">
                             {formatTime(bus.departureTime)}
                         </div>
                         <div className="text-[10px] font-medium text-slate-400 mt-1 uppercase">

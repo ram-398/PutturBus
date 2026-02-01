@@ -5,15 +5,12 @@ import { Coordinates } from '@/lib/geo';
 import { useEffect, useState } from 'react';
 import { getRoadRoute, RoadRoute } from '@/lib/osrm';
 import { getRouteLocation } from '@/data/locations';
+import { MapSkeleton } from './Skeletons';
 
 // Dynamically import RouteMap with no SSR, valid here since this is a Client Component
 const RouteMap = dynamic(() => import('./RouteMap'), {
     ssr: false,
-    loading: () => (
-        <div className="h-[300px] w-full rounded-2xl bg-muted animate-pulse flex items-center justify-center text-muted-foreground">
-            Loading Map...
-        </div>
-    )
+    loading: () => <MapSkeleton />
 });
 
 interface RouteMapWrapperProps {
