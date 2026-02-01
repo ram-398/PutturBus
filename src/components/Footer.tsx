@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ExternalLink, Heart, Globe, Terminal, Bus } from "lucide-react";
+import Image from "next/image";
+import Logo from "@/Assets/Logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function Footer() {
@@ -17,8 +19,14 @@ export function Footer() {
                     {/* Column 1: Branding */}
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-2 group w-fit">
-                            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:bg-blue-700 transition-colors">
-                                P
+                            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-slate-100 shadow-md group-hover:border-blue-200 transition-colors">
+                                <Image
+                                    src={Logo}
+                                    alt="PutturBus Logo"
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 40px, 48px"
+                                />
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-slate-900 dark:text-white leading-none">{t('app_name')}</h2>

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Map, HelpCircle, Globe } from "lucide-react";
+import Image from "next/image";
+import Logo from "@/Assets/Logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function SiteHeader() {
@@ -14,8 +16,15 @@ export function SiteHeader() {
             <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
                 {/* Logo / Home Link */}
                 <Link href="/" className="flex items-center gap-2 group shrink-0">
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm group-hover:bg-blue-700 transition-colors">
-                        P
+                    <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-slate-100 shadow-sm group-hover:border-blue-200 transition-colors">
+                        <Image
+                            src={Logo}
+                            alt="PutturBus Logo"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 32px, 40px"
+                            priority
+                        />
                     </div>
                     <div className="hidden sm:block">
                         <h1 className="text-lg font-bold text-slate-900 leading-none">PutturBus</h1>
