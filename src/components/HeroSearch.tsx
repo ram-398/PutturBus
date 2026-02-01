@@ -3,6 +3,7 @@
 import { track } from '@/lib/analytics';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Search, MapPin, ArrowRight, History, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SearchTabs } from './SearchTabs';
@@ -21,6 +22,19 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
     const [query, setQuery] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        if (searchParams.get('focus') === 'search') {
+            // Small timeout to ensure render is complete and prevent layout thrashing
+            setTimeout(() => {
+                inputRef.current?.focus();
+                setIsFocused(true);
+                // Optional: Scroll to search section
+                inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    }, [searchParams]);
 
     const filteredSuggestions = query
         ? suggestions.filter(s => s.toLowerCase().includes(query.toLowerCase())).slice(0, 5)

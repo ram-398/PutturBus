@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { RoutePageClient } from '@/components/RoutePageClient';
-import { IntercityRoutePageClient } from '@/components/IntercityRoutePageClient';
+import { Suspense } from 'react';
+import ClientRouteView from './ClientRouteView';
 import { findDestination, isIntercityDest } from '@/lib/route-matcher';
 import { getAllRouteSlugs, getRouteStats, getRouteFAQ } from '@/lib/seo-data';
 
@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function RoutePage({ params }: Props) {
     const { slug } = await params;
     const destName = findDestination(slug);
+    const isIntercity = isIntercityDest(destName);
     const stats = getRouteStats(slug);
     const faqs = stats ? getRouteFAQ(stats) : [];
 
@@ -95,12 +96,10 @@ export default async function RoutePage({ params }: Props) {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
 
-            {/* Main Content */}
-            {isIntercityDest(destName) ? (
-                <IntercityRoutePageClient slug={slug} />
-            ) : (
-                <RoutePageClient slug={slug} />
-            )}
+            {/* Main Content Wrapped in Suspense */}
+            <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading route data...</div>}>
+                <ClientRouteView slug={slug} isIntercity={isIntercity} />
+            </Suspense>
 
             {/* SEO Content Injection - Hidden from main visual flow but visible to crawlers/readers at bottom */}
             {stats && (

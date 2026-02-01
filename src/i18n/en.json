@@ -4,6 +4,8 @@
     "home": "Home",
     "directory": "Directory",
     "help": "Help",
+    "search": "Search",
+    "intercity": "Intercity",
     "search_placeholder": "Search for any route...",
     "find_buses_title": "Find buses from Puttur",
     "find_buses_subtitle": "Search KSRTC routes, timings, and connections instantly.",

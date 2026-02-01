@@ -15,6 +15,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
+import { Suspense } from "react";
+import BottomNav from "@/components/BottomNav";
 
 export default function RootLayout({
   children,
@@ -29,8 +31,13 @@ export default function RootLayout({
         <LanguageProvider>
           <OfflineIndicator />
           <SiteHeader />
-          {children}
+          <div className="pb-20 md:pb-0 min-h-screen">
+            {children}
+          </div>
           <Footer />
+          <Suspense fallback={null}>
+            <BottomNav />
+          </Suspense>
         </LanguageProvider>
       </body>
 

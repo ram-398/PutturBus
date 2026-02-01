@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import { HeroSearch } from '@/components/HeroSearch';
 import { BusList } from '@/components/BusList';
 import { FilterBar } from '@/components/FilterBar';
@@ -90,10 +90,12 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
-      <HeroSearch
-        onSearch={setSearchTerm}
-        suggestions={ALL_DESTINATIONS}
-      />
+      <Suspense fallback={<div className="h-[400px] bg-blue-600 animate-pulse" />}>
+        <HeroSearch
+          onSearch={setSearchTerm}
+          suggestions={ALL_DESTINATIONS}
+        />
+      </Suspense>
 
       {/* Community Banner (Home Page Only) */}
       <div className="bg-blue-50/80 border-b border-blue-100 px-4 py-2 text-center text-xs text-blue-800">
