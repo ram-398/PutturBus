@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, Suspense } from 'react';
+import { useState, useMemo, Suspense, useEffect } from 'react';
 import { HeroSearch } from '@/components/HeroSearch';
 import { BusList } from '@/components/BusList';
 import { FilterBar } from '@/components/FilterBar';
@@ -8,6 +8,7 @@ import { Disclaimer } from '@/components/Disclaimer';
 import { QuickLinks } from '@/components/QuickLinks';
 import { HowItWorks } from '@/components/HowItWorks';
 import { TrustIndicators } from '@/components/TrustIndicators';
+import { CheckCircle } from 'lucide-react';
 
 // Route Engine
 import { getRoutes, RouteType } from '@/lib/route-engine-switcher';
@@ -88,6 +89,18 @@ export default function Home() {
   const hasResults = (searchResult.type === 'local' && filteredLocalBuses.length > 0) ||
     (searchResult.type === 'intercity' && filteredIntercityBuses.length > 0);
 
+  // Auto-scroll logic
+  useEffect(() => {
+    if (hasResults) {
+      setTimeout(() => {
+        const resultsEl = document.getElementById('search-results');
+        if (resultsEl) {
+          resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [hasResults, searchTerm]); // Trigger on results or new search
+
   return (
     <main className="min-h-screen bg-background">
       <Suspense fallback={<div className="h-[400px] bg-slate-50 animate-pulse" />}>
@@ -103,65 +116,70 @@ export default function Home() {
       </div>
 
       <div className="-mt-16 relative z-30 max-w-3xl mx-auto px-4 pb-20">
-        <div className="bg-card rounded-3xl shadow-xl border border-border/50 min-h-[60vh] overflow-hidden">
-          <div className="bg-slate-50/50 border-b border-slate-100 sticky top-[calc(var(--header-height)+env(safe-area-inset-top)-1px)] z-30 backdrop-blur-md">
-            <div className="pt-2 px-4 pb-2">
-              <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2" />
-            </div>
-
-            {/* Only show filters for Local? Or adaptable? */}
-            {searchResult.type === 'local' && (
-              <FilterBar
-                selectedTime={selectedTime}
-                onTimeChange={setSelectedTime}
-                selectedType={selectedType}
-                onTypeChange={setSelectedType}
-              />
-            )}
-
-            {searchResult.type === 'intercity' && (
-              <div className="px-4 py-3 flex items-center justify-between bg-blue-50/50 border-b border-blue-100">
-                <span className="text-xs font-bold text-blue-700 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                  Intercity Engine Active
-                </span>
-                <span className="text-xs font-medium text-slate-500">
-                  KSRTC Schedules
-                </span>
-              </div>
-            )}
-          </div>
-
-          {!isSearching ? (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <QuickLinks />
-              <HowItWorks />
-            </div>
-          ) : (
-            <div className="px-2 pt-2 animate-in fade-in zoom-in-95 duration-300">
-              <div className="text-sm text-muted-foreground px-4 mb-2 font-medium flex justify-between items-center py-2">
-                <span>
-                  {searchResult.type === 'local' ? filteredLocalBuses.length : filteredIntercityBuses.length} buses found
-                </span>
-                {searchTerm && <span className="text-primary truncate ml-2">to &quot;{searchTerm}&quot;</span>}
+        <div id="search-results" className={`transition-all duration-500 scroll-mt-[calc(var(--header-height)+20px)] ${isSearching ? 'animate-result-reveal' : ''}`}>
+          <div className="bg-card rounded-3xl shadow-xl border border-border/50 min-h-[60vh] overflow-hidden">
+            <div className="bg-slate-50/50 border-b border-slate-100 sticky top-[calc(var(--header-height)+env(safe-area-inset-top)-1px)] z-30 backdrop-blur-md">
+              <div className="pt-2 px-4 pb-2">
+                <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2" />
               </div>
 
-              {searchResult.type === 'local' ? (
-                <BusList buses={filteredLocalBuses} />
-              ) : (
-                <div className="space-y-3 px-2">
-                  {filteredIntercityBuses.map(bus => (
-                    <IntercityBusCard key={bus.id} bus={bus} />
-                  ))}
-                  {filteredIntercityBuses.length === 0 && (
-                    <div className="text-center py-10 text-slate-400">
-                      No intercity buses found.
-                    </div>
-                  )}
+              {/* Only show filters for Local? Or adaptable? */}
+              {searchResult.type === 'local' && (
+                <FilterBar
+                  selectedTime={selectedTime}
+                  onTimeChange={setSelectedTime}
+                  selectedType={selectedType}
+                  onTypeChange={setSelectedType}
+                />
+              )}
+
+              {searchResult.type === 'intercity' && (
+                <div className="px-4 py-3 flex items-center justify-between bg-blue-50/50 border-b border-blue-100">
+                  <span className="text-xs font-bold text-blue-700 uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    Intercity Engine Active
+                  </span>
+                  <span className="text-xs font-medium text-slate-500">
+                    KSRTC Schedules
+                  </span>
                 </div>
               )}
             </div>
-          )}
+
+            {!isSearching ? (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <QuickLinks />
+                <HowItWorks />
+              </div>
+            ) : (
+              <div className="px-2 pt-2 animate-in fade-in zoom-in-95 duration-300">
+                {/* Results Found Banner */}
+                <div className="mx-4 mb-4 bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-center gap-3 animate-in slide-in-from-top-2 duration-500">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                  </div>
+                  <div className="text-sm font-medium text-emerald-900">
+                    {searchResult.type === 'local' ? filteredLocalBuses.length : filteredIntercityBuses.length} buses found to <span className="font-bold">{searchTerm}</span>
+                  </div>
+                </div>
+
+                {searchResult.type === 'local' ? (
+                  <BusList buses={filteredLocalBuses} />
+                ) : (
+                  <div className="space-y-3 px-2">
+                    {filteredIntercityBuses.map(bus => (
+                      <IntercityBusCard key={bus.id} bus={bus} />
+                    ))}
+                    {filteredIntercityBuses.length === 0 && (
+                      <div className="text-center py-10 text-slate-400">
+                        No intercity buses found.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

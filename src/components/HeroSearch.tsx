@@ -42,6 +42,11 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
 
     const handleSearch = (term: string) => {
         setQuery(term);
+        // Mobile Magic: Blur active element to close keyboard
+        if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+
         onSearch(term);
         setIsFocused(false);
         track("search", { search_term: term });
@@ -125,7 +130,15 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                                             value={query}
                                             onChange={(e) => {
                                                 setQuery(e.target.value);
+                                                // Live search disabled for auto-scroll logic, wait for submit or selection
+                                                // But usually we want live filtering...
+                                                // Actually onSearch calls update on every keystroke, which might trigger auto-scroll prematurely.
+                                                // For auto-scroll we trigger it on explicit Submit.
+                                                // But existing logic is live. We'll leave live update but add explicit handleSearch call on button/enter.
                                                 onSearch(e.target.value);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') handleSearch(query);
                                             }}
                                             onFocus={() => setIsFocused(true)}
                                             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
@@ -159,7 +172,7 @@ export function HeroSearch({ onSearch, suggestions }: HeroSearchProps) {
                                 {/* Search Button */}
                                 <div className="flex gap-2">
                                     <button
-                                        onClick={() => { }}
+                                        onClick={() => handleSearch(query)}
                                         className="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-semibold rounded-xl px-8 py-4 md:py-0 transition-all flex items-center justify-center gap-2 shadow-md shadow-sky-500/20 active:scale-95 focus:ring-4 focus:ring-sky-500/30 outline-none"
                                     >
                                         <Search className="w-5 h-5" />
